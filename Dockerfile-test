@@ -1,0 +1,17 @@
+FROM python:3.9-slim
+
+# Set the working directory to /app
+WORKDIR /app
+
+# Copy the application code into the container
+COPY app /app
+COPY app/tests /app/tests
+
+# Create the uploads directory inside the container
+RUN mkdir -p /app/uploads
+
+# Install dependencies
+RUN pip install requests
+
+# Set the command to run the Flask application
+CMD ["python3", "test.py"]
