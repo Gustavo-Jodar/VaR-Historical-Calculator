@@ -34,6 +34,17 @@ parser.add_argument(
     help="Confidence level for VaR"
 )
 
+parser2 = reqparse.RequestParser()
+
+# File upload parser for Swagger
+parser2.add_argument(
+    'file', 
+    location='files', 
+    type=FileStorage, 
+    required=True, 
+    help="Upload the file"
+)
+
 # Utility function to validate the uploaded file
 def validate_file(file):
     if file.filename == '':
@@ -90,6 +101,24 @@ class PortfolioVaR(Resource):
         var = var_calculator.get_var(confidence_level)
 
         return {"Calculated Value at Risk": var}, 201
+    
+# Endpoint - /portifolio/sum_sorted_scenarios -> Shows the sum of all scenarios in a portfolio
+@portfolio_ns.route('/sum_sorted_scenarios')
+class PortfolioSumSortedScenarios(Resource):
+    @portfolio_ns.expect(parser2)
+    def post(self):
+        """Upload a file to show the sum of scenarios in a portfolio"""
+        args = parser2.parse_args()
+        file = args['file']
+
+        # Validate file and confidence level
+        file_path = validate_file(file)
+
+        # Calculate portfolio VaR
+        var_calculator = VaR(api, file_path)
+        sorted_sum_of_scenarios = var_calculator.get_sorted_scenarios_sum()
+
+        return {"Sorted Sum of Scenarios": sorted_sum_of_scenarios}, 201
 
 # Endpoint - /portifolio/varPerTrade -> Calculates VaR for every trade in a portfolio
 @portfolio_ns.route('/varPerTrade')
