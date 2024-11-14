@@ -70,9 +70,3 @@ sudo docker run --network=host var_calculator_tester_app
 cd VaR-App/app
 python3 test.py
 ```
-
-## Discussion - What was noted from the calculations
-
-When calculating VaR for a portfolio, the correlation between different trades reduces the overall risk, meaning the portfolio's VaR tends to be lower than the sum of individual trade VaRs. This can be seen after comparing the result of /trade/var and /portifolio/varPerTrade.  
-
-This reduction in risk is a result of diversification, where assets within the portfolio do not move in perfect sync with each other, thus lowering the portfolio's overall volatility. However, the VaR of the portfolio will still be close to the average VaR of the individual trades, but slightly lower due to this diversification effect.
